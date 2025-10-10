@@ -1,0 +1,345 @@
+[
+    {
+        "id": "2a1c1d586d39d501",
+        "type": "tab",
+        "label": "Flow",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "65aad67279e8a7b3",
+        "type": "inject",
+        "z": "2a1c1d586d39d501",
+        "name": "Trigger MySQL",
+        "props": [
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": true,
+        "onceDelay": "",
+        "topic": "SELECT country_name, year, cases_per_100k, deaths_per_100k FROM covid_annual_metrics;",
+        "x": 100,
+        "y": 160,
+        "wires": [
+            [
+                "8746bf07e283477f"
+            ]
+        ]
+    },
+    {
+        "id": "8746bf07e283477f",
+        "type": "mysql",
+        "z": "2a1c1d586d39d501",
+        "mydb": "ef8a252883099ced",
+        "name": "Get covid_annual_metrics",
+        "x": 330,
+        "y": 160,
+        "wires": [
+            [
+                "b8fadb9349946e02",
+                "635596230af21d20",
+                "af5f99a5b991b109",
+                "8cbc636cef7c7ed9"
+            ]
+        ]
+    },
+    {
+        "id": "b8fadb9349946e02",
+        "type": "function",
+        "z": "2a1c1d586d39d501",
+        "name": "Prepare Data for Chart",
+        "func": "// msg.payload = array de linhas do MySQL\nlet rows = msg.payload || [];\n\n// Todos os anos únicos\nlet labels = [...new Set(rows.map(r => r.year))].sort();\n\n// Todos os países únicos\nlet countries = [...new Set(rows.map(r => r.country_name))];\nlet datasets = [];\n\ncountries.forEach((c, i) => {\n    let countryData = rows.filter(r => r.country_name === c).sort((a,b) => a.year - b.year);\n\n    datasets.push({\n        label: c + ' Casos/100k',\n        data: countryData.map(r => r.cases_per_100k),\n        borderColor: `hsl(${i*60},70%,50%)`,\n        fill: false,\n        tension: 0.2\n    });\n\n    datasets.push({\n        label: c + ' Mortes/100k',\n        data: countryData.map(r => r.deaths_per_100k),\n        borderColor: `hsl(${i*60},70%,30%)`,\n        fill: false,\n        tension: 0.2\n    });\n});\n\nmsg.payload = { labels, datasets };\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 580,
+        "y": 160,
+        "wires": [
+            [
+                "5b73139bdcd7e871"
+            ]
+        ]
+    },
+    {
+        "id": "5b73139bdcd7e871",
+        "type": "ui_template",
+        "z": "2a1c1d586d39d501",
+        "group": "dashboard_group",
+        "name": "COVID Chart",
+        "order": 0,
+        "width": 12,
+        "height": 6,
+        "format": "<div style=\"width:100%;height:100%;\"><canvas id=\"chart-covid\" style=\"width:100%;height:100%;\"></canvas></div>\n<script src=\"https://cdn.jsdelivr.net/npm/chart.js\"></script>\n<script>\n(function(scope) {\n    let chart = null;\n    scope.$watch('msg', function(msg) {\n        if(!msg || !msg.payload) return;\n        const ctx = document.getElementById('chart-covid').getContext('2d');\n        if(chart) chart.destroy();\n        chart = new Chart(ctx, {\n            type: 'line',\n            data: msg.payload,\n            options: { responsive: true, maintainAspectRatio: false, scales: { x:{title:{display:true,text:'Ano'}}, y:{beginAtZero:true,title:{display:true,text:'Por 100k habitantes'}}} }\n        });\n    });\n})(scope);\n</script>",
+        "storeOutMessages": true,
+        "fwdInMessages": true,
+        "resendOnRefresh": true,
+        "templateScope": "local",
+        "className": "",
+        "x": 830,
+        "y": 160,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "635596230af21d20",
+        "type": "function",
+        "z": "2a1c1d586d39d501",
+        "name": "Prepare Data for Chart",
+        "func": "let rows = msg.payload || [];\nlet country = 'Portugal';\n\nlet filtered = rows.filter(r => r.country_name === country).sort((a,b) => a.year - b.year);\n\nlet labels = filtered.map(r => String(r.year));\nlet datasets = [\n    {\n        label: 'Casos/100k',\n        data: filtered.map(r => r.cases_per_100k),\n        borderColor: 'blue',\n        fill: false,\n        tension: 0.2\n    },\n    {\n        label: 'Mortes/100k',\n        data: filtered.map(r => r.deaths_per_100k),\n        borderColor: 'red',\n        fill: false,\n        tension: 0.2\n    }\n];\n\nmsg.payload = { labels, datasets };\nreturn msg;\n",
+        "outputs": 1,
+        "timeout": "",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 580,
+        "y": 240,
+        "wires": [
+            [
+                "3d53e6084ce3b2f4"
+            ]
+        ]
+    },
+    {
+        "id": "3d53e6084ce3b2f4",
+        "type": "ui_template",
+        "z": "2a1c1d586d39d501",
+        "group": "694719986ed35a47",
+        "name": "COVID Chart Portugal",
+        "order": 0,
+        "width": 12,
+        "height": 6,
+        "format": "<div style=\"width:100%;height:100%;\">\n  <canvas id=\"chart-portugal\"></canvas>\n</div>\n\n<script src=\"https://cdn.jsdelivr.net/npm/chart.js\"></script>\n<script>\n(function(scope) {\n    let chart = null;\n    scope.$watch('msg', function(msg) {\n        if(!msg || !msg.payload) return;\n\n        const ctx = document.getElementById('chart-portugal').getContext('2d');\n        if(chart) chart.destroy();\n\n        // Adiciona yAxisID nos datasets\n        msg.payload.datasets.forEach(ds => {\n            if(ds.label.includes('Casos')) ds.yAxisID = 'y1';\n            if(ds.label.includes('Mortes')) ds.yAxisID = 'y2';\n        });\n\n        chart = new Chart(ctx, {\n            type: 'line',\n            data: msg.payload,\n            options: {\n                responsive: true,\n                maintainAspectRatio: false,\n                scales: {\n                    x: {\n                        title: { display: true, text: 'Ano' }\n                    },\n                    y1: {\n                        type: 'linear',\n                        position: 'left',\n                        title: { display: true, text: 'Casos/100k' }\n                    },\n                    y2: {\n                        type: 'linear',\n                        position: 'right',\n                        title: { display: true, text: 'Mortes/100k' },\n                        grid: { drawOnChartArea: false } // evita linhas duplicadas\n                    }\n                }\n            }\n        });\n    });\n})(scope);\n</script>\n",
+        "storeOutMessages": true,
+        "fwdInMessages": true,
+        "resendOnRefresh": true,
+        "templateScope": "local",
+        "className": "",
+        "x": 860,
+        "y": 240,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "af5f99a5b991b109",
+        "type": "function",
+        "z": "2a1c1d586d39d501",
+        "name": "Prepare Data for Chart",
+        "func": "let rows = msg.payload || [];\nlet country = 'France';  \n\nlet filtered = rows.filter(r => r.country_name === country).sort((a,b) => a.year - b.year);\n\nlet labels = filtered.map(r => String(r.year));\nlet datasets = [\n    {\n        label: 'Casos/100k',\n        data: filtered.map(r => r.cases_per_100k),\n        borderColor: 'blue',\n        fill: false,\n        tension: 0.2\n    },\n    {\n        label: 'Mortes/100k',\n        data: filtered.map(r => r.deaths_per_100k),\n        borderColor: 'red',\n        fill: false,\n        tension: 0.2\n    }\n];\n\nmsg.payload = { labels, datasets };\nreturn msg;\n",
+        "outputs": 1,
+        "timeout": "",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 580,
+        "y": 320,
+        "wires": [
+            [
+                "2df5cca3fd5187d7"
+            ]
+        ]
+    },
+    {
+        "id": "2df5cca3fd5187d7",
+        "type": "ui_template",
+        "z": "2a1c1d586d39d501",
+        "group": "b92014424c6a0a30",
+        "name": "COVID Chart França",
+        "order": 0,
+        "width": 12,
+        "height": 6,
+        "format": "<div style=\"width:100%;height:100%;\">\n    <canvas id=\"chart-france\"></canvas>\n</div>\n\n<script src=\"https://cdn.jsdelivr.net/npm/chart.js\"></script>\n<script>\n    (function(scope) {\n    let chart = null;\n    scope.$watch('msg', function(msg) {\n        if(!msg || !msg.payload) return;\n\n        const ctx = document.getElementById('chart-france').getContext('2d');\n        if(chart) chart.destroy();\n\n        // Adiciona yAxisID nos datasets\n        msg.payload.datasets.forEach(ds => {\n            if(ds.label.includes('Casos')) ds.yAxisID = 'y1';\n            if(ds.label.includes('Mortes')) ds.yAxisID = 'y2';\n        });\n\n        chart = new Chart(ctx, {\n            type: 'line',\n            data: msg.payload,\n            options: {\n                responsive: true,\n                maintainAspectRatio: false,\n                scales: {\n                    x: {\n                        title: { display: true, text: 'Ano' }\n                    },\n                    y1: {\n                        type: 'linear',\n                        position: 'left',\n                        title: { display: true, text: 'Casos/100k' }\n                    },\n                    y2: {\n                        type: 'linear',\n                        position: 'right',\n                        title: { display: true, text: 'Mortes/100k' },\n                        grid: { drawOnChartArea: false } // evita linhas duplicadas\n                    }\n                }\n            }\n        });\n    });\n})(scope);\n</script>",
+        "storeOutMessages": true,
+        "fwdInMessages": true,
+        "resendOnRefresh": true,
+        "templateScope": "local",
+        "className": "",
+        "x": 860,
+        "y": 320,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "b6d3ea4b34ba2080",
+        "type": "inject",
+        "z": "2a1c1d586d39d501",
+        "name": "",
+        "props": [
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "SELECT country_name, year, cases_per_100k, deaths_per_100k FROM covid_annual_metrics WHERE year = 2023 ORDER BY deaths_per_100k DESC LIMIT 10;",
+        "x": 70,
+        "y": 60,
+        "wires": [
+            [
+                "b1806d4fe9958633"
+            ]
+        ]
+    },
+    {
+        "id": "b1806d4fe9958633",
+        "type": "mysql",
+        "z": "2a1c1d586d39d501",
+        "mydb": "ef8a252883099ced",
+        "name": "",
+        "x": 290,
+        "y": 60,
+        "wires": [
+            [
+                "0e8e7c0b491e14f3"
+            ]
+        ]
+    },
+    {
+        "id": "0e8e7c0b491e14f3",
+        "type": "debug",
+        "z": "2a1c1d586d39d501",
+        "name": "debug 2",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 540,
+        "y": 60,
+        "wires": []
+    },
+    {
+        "id": "8cbc636cef7c7ed9",
+        "type": "function",
+        "z": "2a1c1d586d39d501",
+        "name": "Prepare Data for Chart",
+        "func": "let rows = msg.payload || [];\nlet country = 'Germany'; \n\nlet filtered = rows.filter(r => r.country_name === country).sort((a, b) => a.year - b.year);\n\nlet labels = filtered.map(r => String(r.year));\nlet datasets = [\n    {\n        label: 'Casos/100k',\n        data: filtered.map(r => r.cases_per_100k),\n        borderColor: 'blue',\n        fill: false,\n        tension: 0.2,\n        yAxisID: 'y1'\n    },\n    {\n        label: 'Mortes/100k',\n        data: filtered.map(r => r.deaths_per_100k),\n        borderColor: 'red',\n        fill: false,\n        tension: 0.2,\n        yAxisID: 'y2'\n    }\n];\n\nmsg.payload = { labels, datasets };\nreturn msg;\n",
+        "outputs": 1,
+        "timeout": "",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 580,
+        "y": 400,
+        "wires": [
+            [
+                "c3cb3e6ebffce0a5"
+            ]
+        ]
+    },
+    {
+        "id": "c3cb3e6ebffce0a5",
+        "type": "ui_template",
+        "z": "2a1c1d586d39d501",
+        "group": "fdad8b32f663f1f4",
+        "name": "COVID Chart Alemanha",
+        "order": 0,
+        "width": 12,
+        "height": 6,
+        "format": "<div style=\"width:100%;height:100%;\">\n    <canvas id=\"chart-germany\"></canvas>\n</div>\n\n<script src=\"https://cdn.jsdelivr.net/npm/chart.js\"></script>\n<script>\n    (function(scope) {\n    let chart = null;\n    scope.$watch('msg', function(msg) {\n        if(!msg || !msg.payload) return;\n\n        const ctx = document.getElementById('chart-germany').getContext('2d');\n        if(chart) chart.destroy();\n\n        chart = new Chart(ctx, {\n            type: 'line',\n            data: msg.payload,\n            options: {\n                responsive: true,\n                maintainAspectRatio: false,\n                scales: {\n                    x: {\n                        title: { display: true, text: 'Ano' }\n                    },\n                    y1: {\n                        type: 'linear',\n                        position: 'left',\n                        title: { display: true, text: 'Casos/100k' }\n                    },\n                    y2: {\n                        type: 'linear',\n                        position: 'right',\n                        title: { display: true, text: 'Mortes/100k' },\n                        grid: { drawOnChartArea: false }\n                    }\n                }\n            }\n        });\n    });\n})(scope);\n</script>",
+        "storeOutMessages": true,
+        "fwdInMessages": true,
+        "resendOnRefresh": true,
+        "templateScope": "local",
+        "className": "",
+        "x": 870,
+        "y": 400,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "ef8a252883099ced",
+        "type": "MySQLdatabase",
+        "name": "health_data",
+        "host": "127.0.0.1",
+        "port": "3306",
+        "db": "health_data",
+        "tz": "",
+        "charset": "UTF8"
+    },
+    {
+        "id": "dashboard_group",
+        "type": "ui_group",
+        "name": "Geral",
+        "tab": "dashboard_page",
+        "order": 1,
+        "disp": true,
+        "width": "12",
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "694719986ed35a47",
+        "type": "ui_group",
+        "name": "Portugal",
+        "tab": "df4352a4e6ee426a",
+        "order": 2,
+        "disp": true,
+        "width": "12",
+        "collapse": true,
+        "className": ""
+    },
+    {
+        "id": "b92014424c6a0a30",
+        "type": "ui_group",
+        "name": "França",
+        "tab": "df4352a4e6ee426a",
+        "order": 1,
+        "disp": true,
+        "width": "12",
+        "collapse": true,
+        "className": ""
+    },
+    {
+        "id": "fdad8b32f663f1f4",
+        "type": "ui_group",
+        "name": "Alemanha",
+        "tab": "df4352a4e6ee426a",
+        "order": 3,
+        "disp": true,
+        "width": "12",
+        "collapse": true,
+        "className": ""
+    },
+    {
+        "id": "dashboard_page",
+        "type": "ui_tab",
+        "name": "Teste",
+        "icon": "dashboard",
+        "order": 1,
+        "disabled": false,
+        "hidden": false
+    },
+    {
+        "id": "df4352a4e6ee426a",
+        "type": "ui_tab",
+        "name": "Países",
+        "icon": "dashboard",
+        "disabled": false,
+        "hidden": false
+    },
+    {
+        "id": "909ef05036643db9",
+        "type": "global-config",
+        "env": [],
+        "modules": {
+            "node-red-node-mysql": "2.0.0",
+            "node-red-dashboard": "3.6.6"
+        }
+    }
+]
