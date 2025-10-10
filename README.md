@@ -130,7 +130,7 @@ tp01-25436/
 
 ---
 
-## 🧾 Observações
+## Observações
 
 - Os dados originais estão acessíveis via Google Drive (ver link acima).  
 - Todos os ficheiros seguem a estrutura exigida no enunciado.  
