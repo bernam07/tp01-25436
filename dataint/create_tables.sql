@@ -1,9 +1,8 @@
 CREATE DATABASE IF NOT EXISTS health_data;
 USE health_data;
 
--- ------------------------------------------------------------
 -- Tabela: iso_country_codes
--- ------------------------------------------------------------
+
 CREATE TABLE IF NOT EXISTS iso_country_codes (
     country_name VARCHAR(100),
     iso_alpha2 CHAR(2),
@@ -11,9 +10,8 @@ CREATE TABLE IF NOT EXISTS iso_country_codes (
     PRIMARY KEY (iso_alpha3)
 );
 
--- ------------------------------------------------------------
 -- Tabela: population
--- ------------------------------------------------------------
+
 CREATE TABLE IF NOT EXISTS population (
     country_name VARCHAR(100),
     country_code CHAR(3),
@@ -25,9 +23,8 @@ CREATE TABLE IF NOT EXISTS population (
     PRIMARY KEY (country_code)
 );
 
--- ------------------------------------------------------------
 -- Tabela: cases_deaths
--- ------------------------------------------------------------
+
 CREATE TABLE IF NOT EXISTS cases_deaths (
     id INT AUTO_INCREMENT PRIMARY KEY,
     country VARCHAR(100),

@@ -1,3 +1,5 @@
+-- Cria tabela com o número total de mortes por país
+
 CREATE TABLE covid_total_deaths AS
 SELECT 
     country_iso,

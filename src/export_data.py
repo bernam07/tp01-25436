@@ -20,4 +20,4 @@ conn.close()
 output_path = "C:/tp01-25436/data/output/covid_annual_metrics.csv"
 df.to_csv(output_path, index=False)
 
-print(f"✅ Export completo! Ficheiro criado em: {output_path}")
+print(f"Export completo! Ficheiro criado em: {output_path}")

@@ -69,7 +69,7 @@ tp01-25436/
 
 ## Ferramentas Utilizadas
 
-- **MySQL 8.0** – Base de dados e transformações ETL  
+- **MySQL 8.0** – Base de dados
 - **MySQL Workbench** – Importação e execução de queries  
 - **Node-RED 3.1 + Dashboard 2.0** – Visualização dos resultados  
 - **Python 3.14.0** – Exportação automática dos dados finais  
@@ -98,6 +98,8 @@ tp01-25436/
 
 5. Executar o script SQL `covid_total_deaths.sql` e confirmar que a tabela `covid_total_deaths` foi criada com sucesso.
 
+6. Executar o script SQL `covid_top10_mortality.sql` e confirmar que a tabela `covid_top10_mortality` foi criada com sucesso.
+
 ---
 
 ### 2. Executar o Node-RED Dashboard
@@ -105,18 +107,18 @@ tp01-25436/
    ```bash
    node-red
    ```
-2. Aceder a [http://localhost:1880]http://localhost:1880  
+2. Aceder a [http://localhost:1880](http://localhost:1880)  
 3. Menu → **Import** → colar o conteúdo de `dataint/node-red-flow.json` 
 4. Clicar em **Deploy**
 5. Repetir o processo num flow diferente, usando o conteúdo de `dataint/node-red-mortality-rate.json`
-6. Abrir o dashboard em:  [http://localhost:1880/ui]http://localhost:1880/ui
+6. Abrir o dashboard em:  [http://localhost:1880/ui](http://localhost:1880/ui)
 
 
 #### Separadores do dashboard:
 
 - **Geral:** visão global com todos os países (forma de testar a integração)  
 - **Países:** gráficos individuais para Portugal, França e Alemanha  
-- **Estatísticas:** evolução da taxa de mortalidade entre Portugal, França e Alemanha  
+- **Estatísticas:** gráfico com a evolução da taxa de mortalidade entre Portugal, França e Alemanha e tabela com o top 10 países com a taxa média de mortalidade mais alta
 ---
 
 ### 3. Exportar Dados com Python
@@ -149,6 +151,7 @@ tp01-25436/
 - Comparação visual entre Portugal, França e Alemanha
 - Apresentação do indíce de mortalidade tanto em tabela como graficamente
 - Tabela `covid_total_deaths` com o número total de mortes por país
+- Tabela `covid_top10_mortality` com o top 10 países com a taxa média de mortalidade mais alta
 
 ---
 

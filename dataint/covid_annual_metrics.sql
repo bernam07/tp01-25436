@@ -1,5 +1,7 @@
 USE health_data;
 
+-- Criar tabela covid_annual_metrics que engloba a junção dos dados das 3 tabelas originais
+
 CREATE TABLE IF NOT EXISTS covid_annual_metrics (
     country_iso CHAR(3) NOT NULL,
     country_name VARCHAR(100),

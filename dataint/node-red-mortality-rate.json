@@ -82,6 +82,64 @@
         ]
     },
     {
+        "id": "d4a0f6b9b2d7f2a1",
+        "type": "inject",
+        "z": "11486f3ff8ee0ee9",
+        "name": "Get Top10 Mortality",
+        "props": [
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "once": true,
+        "onceDelay": "",
+        "topic": "SELECT country_name, avg_mortality_rate FROM covid_top10_mortality ORDER BY avg_mortality_rate DESC;",
+        "x": 190,
+        "y": 300,
+        "wires": [
+            [
+                "ad61c2e3a14df20d"
+            ]
+        ]
+    },
+    {
+        "id": "ad61c2e3a14df20d",
+        "type": "mysql",
+        "z": "11486f3ff8ee0ee9",
+        "mydb": "ef8a252883099ced",
+        "name": "Query Top10 Mortality",
+        "x": 460,
+        "y": 300,
+        "wires": [
+            [
+                "cf936cdb4b9b6d4f"
+            ]
+        ]
+    },
+    {
+        "id": "cf936cdb4b9b6d4f",
+        "type": "ui_template",
+        "z": "11486f3ff8ee0ee9",
+        "group": "ecb0a93006d6747d",
+        "name": "Tabela Top10 Mortalidade",
+        "order": 0,
+        "width": 12,
+        "height": 6,
+        "format": "<table style=\"width:100%;text-align:left;border-collapse:collapse;\">\n  <thead>\n    <tr style=\"background:#333;color:white;\">\n      <th>Posição</th>\n      <th>País</th>\n      <th>Taxa Média (%)</th>\n    </tr>\n  </thead>\n  <tbody id=\"mortality-table-body\"></tbody>\n</table>\n\n<script>\n(function(scope){\n  scope.$watch('msg', function(msg){\n    if(!msg || !msg.payload) return;\n    let html=\"\";\n    msg.payload.forEach((row, i)=>{\n      html += `<tr style='border-bottom:1px solid #ccc;'>\n        <td>${i+1}</td>\n        <td>${row.country_name}</td>\n        <td>${row.avg_mortality_rate.toFixed(2)}</td>\n      </tr>`;\n    });\n    document.getElementById('mortality-table-body').innerHTML = html;\n  });\n})(scope);\n</script>",
+        "storeOutMessages": true,
+        "fwdInMessages": true,
+        "resendOnRefresh": true,
+        "templateScope": "local",
+        "className": "",
+        "x": 740,
+        "y": 300,
+        "wires": [
+            []
+        ]
+    },
+    {
         "id": "ef8a252883099ced",
         "type": "MySQLdatabase",
         "name": "health_data",
@@ -95,7 +153,7 @@
         "id": "4a8b3b9f7d21a8a0",
         "type": "ui_group",
         "name": "Taxa de Mortalidade",
-        "tab": "df4352a4e6ee426a",
+        "tab": "90bae42b81ca08da",
         "order": 4,
         "disp": true,
         "width": "12",
@@ -103,15 +161,26 @@
         "className": ""
     },
     {
-        "id": "df4352a4e6ee426a",
+        "id": "ecb0a93006d6747d",
+        "type": "ui_group",
+        "name": "Top 10 Mortalidade",
+        "tab": "90bae42b81ca08da",
+        "order": 5,
+        "disp": true,
+        "width": "12",
+        "collapse": true,
+        "className": ""
+    },
+    {
+        "id": "90bae42b81ca08da",
         "type": "ui_tab",
-        "name": "Países",
+        "name": "Estatísticas",
         "icon": "dashboard",
         "disabled": false,
         "hidden": false
     },
     {
-        "id": "c93550c679c1a7a1",
+        "id": "30b4f3977a7959ef",
         "type": "global-config",
         "env": [],
         "modules": {

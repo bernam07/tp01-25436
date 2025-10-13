@@ -1,7 +1,7 @@
 -- Adicionar coluna para o índice de mortalidade
 ALTER TABLE covid_annual_metrics ADD COLUMN mortality_rate FLOAT;
 
--- Desligar o Safe_Update por causa da primary key
+-- Desligar o Safe_Update por causa da PK
 SET SQL_SAFE_UPDATES = 0;
 
 UPDATE covid_annual_metrics
