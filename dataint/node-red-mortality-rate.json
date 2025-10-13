@@ -1,0 +1,122 @@
+[
+    {
+        "id": "11486f3ff8ee0ee9",
+        "type": "tab",
+        "label": "Flow 1",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "df3b2cfa2c5c1f13",
+        "type": "function",
+        "z": "11486f3ff8ee0ee9",
+        "name": "Prepare Mortality Data",
+        "func": "let rows = msg.payload || [];\nlet countries = ['Portugal', 'France', 'Germany'];\nlet datasets = [];\nlet labels = [...new Set(rows.map(r => r.year))].sort();\n\ncountries.forEach((country, i) => {\n    let filtered = rows.filter(r => r.country_name === country).sort((a,b) => a.year - b.year);\n    datasets.push({\n        label: country + ' - Mortalidade (%)',\n        data: filtered.map(r => r.mortality_rate),\n        borderColor: `hsl(${i*60},70%,50%)`,\n        fill: false,\n        tension: 0.2\n    });\n});\n\nmsg.payload = { labels, datasets };\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 560,
+        "y": 180,
+        "wires": [
+            [
+                "34c543a5ef86e69b"
+            ]
+        ]
+    },
+    {
+        "id": "9f4d6d83ce4bbd22",
+        "type": "inject",
+        "z": "11486f3ff8ee0ee9",
+        "name": "Trigger Mortality Query",
+        "props": [
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "once": true,
+        "onceDelay": "",
+        "topic": "SELECT country_name, year, mortality_rate FROM covid_annual_metrics WHERE country_name IN ('Portugal','France','Germany');",
+        "x": 130,
+        "y": 180,
+        "wires": [
+            [
+                "e10fc89d3efbd562"
+            ]
+        ]
+    },
+    {
+        "id": "e10fc89d3efbd562",
+        "type": "mysql",
+        "z": "11486f3ff8ee0ee9",
+        "mydb": "ef8a252883099ced",
+        "name": "Get Mortality Data",
+        "x": 340,
+        "y": 180,
+        "wires": [
+            [
+                "df3b2cfa2c5c1f13"
+            ]
+        ]
+    },
+    {
+        "id": "34c543a5ef86e69b",
+        "type": "ui_template",
+        "z": "11486f3ff8ee0ee9",
+        "group": "4a8b3b9f7d21a8a0",
+        "name": "Chart - Taxa de Mortalidade (%)",
+        "order": 0,
+        "width": 12,
+        "height": 6,
+        "format": "<div style=\"width:100%;height:100%;\"><canvas id=\"chart-mortality\"></canvas></div>\n<script src=\"https://cdn.jsdelivr.net/npm/chart.js\"></script>\n<script>\n(function(scope) {\n    let chart = null;\n    scope.$watch('msg', function(msg) {\n        if(!msg || !msg.payload) return;\n        const ctx = document.getElementById('chart-mortality').getContext('2d');\n        if(chart) chart.destroy();\n\n        chart = new Chart(ctx, {\n            type: 'line',\n            data: msg.payload,\n            options: {\n                responsive: true,\n                maintainAspectRatio: false,\n                scales: {\n                    x: { title: { display: true, text: 'Ano' } },\n                    y: { title: { display: true, text: 'Taxa de Mortalidade (%)' }, beginAtZero: true }\n                },\n                plugins: {\n                    legend: { position: 'top' },\n                    title: { display: true, text: 'Evolução da Taxa de Mortalidade COVID-19 (2020–2024)' }\n                }\n            }\n        });\n    });\n})(scope);\n</script>",
+        "storeOutMessages": true,
+        "fwdInMessages": true,
+        "resendOnRefresh": true,
+        "templateScope": "local",
+        "className": "",
+        "x": 830,
+        "y": 180,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "ef8a252883099ced",
+        "type": "MySQLdatabase",
+        "name": "health_data",
+        "host": "127.0.0.1",
+        "port": "3306",
+        "db": "health_data",
+        "tz": "",
+        "charset": "UTF8"
+    },
+    {
+        "id": "4a8b3b9f7d21a8a0",
+        "type": "ui_group",
+        "name": "Taxa de Mortalidade",
+        "tab": "df4352a4e6ee426a",
+        "order": 4,
+        "disp": true,
+        "width": "12",
+        "collapse": true,
+        "className": ""
+    },
+    {
+        "id": "df4352a4e6ee426a",
+        "type": "ui_tab",
+        "name": "Países",
+        "icon": "dashboard",
+        "disabled": false,
+        "hidden": false
+    },
+    {
+        "id": "c93550c679c1a7a1",
+        "type": "global-config",
+        "env": [],
+        "modules": {
+            "node-red-node-mysql": "2.0.0",
+            "node-red-dashboard": "3.6.6"
+        }
+    }
+]
