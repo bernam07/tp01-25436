@@ -1,6 +1,6 @@
 # TP01 – Integração de Dados de Saúde Pública (COVID-19)
 
-## 👤 Autor
+## Autor
 - **Nome:** Bernardo Martins  
 - **Nº de Aluno:** 25436  
 - **UC:** Integração de Sistemas de Informação (3º Ano, LESI)  
@@ -29,7 +29,10 @@ tp01-25436/
 │   ├── load_data.sql
 │   ├── transform.sql
 │   ├── covid_annual_metrics.sql
-│   └── node-red-flow.json                ← Flow completo do Node-RED
+│   ├── node-red-flow.json                ← Flow completo do Node-RED
+│   ├── node-red-mortality-rate.json                ← Flow mortalidade do Node-RED
+│   ├── add_mortality_rate.sql
+│   └── covid_total_deaths.sql
 │
 ├── data/
 │   ├── input/
@@ -39,11 +42,14 @@ tp01-25436/
 │   │
 │   └── output/
 │       ├── covid_annual_metrics.csv      ← Export gerado pelo Python
-│       └── dashboard_geral.png      ← Print do dashboard geral
-│       └── dashboards.png      ← Print dos dashboards individuais  
+│       ├── dashboard_geral.png      ← Print do dashboard geral
+│       ├── dashboards.png      ← Print dos dashboards individuais
+│       ├── dashboard_mortality_rate.png      ← Print do dashboard de mortalidade  
+│       └── top10_total_deaths.csv      ← Export gerado pelo Python 
 │
 └── src/
-    └── export_covid_data.py              ← Script Python de exportação
+    ├── export_data.py              ← Script Python de exportação
+    └── export_top10_deaths.py              ← Script Python de exportação top 10
 ```
 
 ---
@@ -88,6 +94,10 @@ tp01-25436/
 
 3. Confirmar que a tabela `covid_annual_metrics` foi criada com sucesso.
 
+4. Executar o script SQL `add_mortality_rate.sql` e verificar as alterações na tabela `covid_annual_metrics`.
+
+5. Executar o script SQL `covid_total_deaths.sql` e confirmar que a tabela `covid_total_deaths` foi criada com sucesso.
+
 ---
 
 ### 2. Executar o Node-RED Dashboard
@@ -95,15 +105,18 @@ tp01-25436/
    ```bash
    node-red
    ```
-2. Aceder a [http://localhost:1880]  
-3. Menu → **Import** → colar o conteúdo de `dataint/node-red-flow.json`
+2. Aceder a [http://localhost:1880]http://localhost:1880  
+3. Menu → **Import** → colar o conteúdo de `dataint/node-red-flow.json` 
 4. Clicar em **Deploy**
-5. Abrir o dashboard em:  [http://localhost:1880/ui]
+5. Repetir o processo num flow diferente, usando o conteúdo de `dataint/node-red-mortality-rate.json`
+6. Abrir o dashboard em:  [http://localhost:1880/ui]http://localhost:1880/ui
+
 
 #### Separadores do dashboard:
+
 - **Geral:** visão global com todos os países (forma de testar a integração)  
 - **Países:** gráficos individuais para Portugal, França e Alemanha  
-
+- **Estatísticas:** evolução da taxa de mortalidade entre Portugal, França e Alemanha  
 ---
 
 ### 3. Exportar Dados com Python
@@ -113,20 +126,29 @@ tp01-25436/
    ```
 2. Executar o script:
    ```bash
-   python src/export_covid_data.py
+   python src/export_data.py
    ```
 3. O ficheiro vai ser criado em:
    ```
    data/output/covid_annual_metrics.csv
    ```
-
+4. Executar o script:
+   ```bash
+   python src/export_top10_deaths.py
+   ``` 
+5. O ficheiro vai ser criado em:
+   ```
+   data/output/top10_total_deaths.csv
+   ```
 ---
 
 ## Resultados
 
 - Gráficos de evolução anual (Casos e Mortes / 100k habitantes)  
 - Tabela `covid_annual_metrics` agregada por país e ano  
-- Comparação visual entre Portugal, França e Alemanha  
+- Comparação visual entre Portugal, França e Alemanha
+- Apresentação do indíce de mortalidade tanto em tabela como graficamente
+- Tabela `covid_total_deaths` com o número total de mortes por país
 
 ---
 
