@@ -5,6 +5,10 @@
 - **Nº de Aluno:** 25436  
 - **UC:** Integração de Sistemas de Informação (3º Ano, LESI)  
 - **Ano Letivo:** 2025/26  
+---
+
+**Vídeo:**
+[Vídeo](https://drive.google.com/file/d/16SM6qFDZoZueneibgBDGCJxt3bqplM8T/view?usp=sharing)
 
 ---
 
@@ -22,6 +26,7 @@ tp01-25436/
 ├── README.md
 │
 ├── doc/
+│   ├── ESI-ISI 2025-26 - TP1 - enunciado
 │   └── tp01_25436_doc.pdf                    ← Relatório final
 │
 ├── dataint/
@@ -39,7 +44,7 @@ tp01-25436/
 │   ├── input/
 │   │   ├── population_totals.csv
 │   │   ├── iso_country_codes.csv
-│   │   └── cases_deaths.csv (no Drive)
+│   │   └── cases_deaths.csv (Google Drive)
 │   │
 │   └── output/
 │       ├── covid_annual_metrics.csv          ← Export gerado pelo Python
@@ -61,10 +66,10 @@ tp01-25436/
 |-----------|------------|--------|
 | `cases_deaths.csv` | Dados COVID-19 (casos e mortes por país) | Our World in Data |
 | `population_totals.csv` | População total por país (2020–2024) | World Bank |
-| `iso_country_codes.csv` | Códigos ISO Alpha-2 e Alpha-3 | ISO.org |
+| `iso_country_codes.csv` | Códigos ISO Alpha-2 e Alpha-3 | ISO |
 
 **O ficheiro `cases_deaths.csv` (160 MB)** encontra-se disponível em:  
-(https://drive.google.com/file/d/14S-5q1-pFyIkXB_FGWjGEWSrDnKOV189/view?usp=drive_link)
+[CSV](https://drive.google.com/file/d/14S-5q1-pFyIkXB_FGWjGEWSrDnKOV189/view?usp=drive_link)
 
 ---
 
