@@ -22,17 +22,18 @@ tp01-25436/
 ├── README.md
 │
 ├── doc/
-│   └── tp01_25436_doc.pdf                ← Relatório final
+│   └── tp01_25436_doc.pdf                    ← Relatório final
 │
 ├── dataint/
-│   ├── create_tables.sql
-│   ├── load_data.sql
-│   ├── transform.sql
-│   ├── covid_annual_metrics.sql
-│   ├── node-red-flow.json                ← Flow completo do Node-RED
-│   ├── node-red-mortality-rate.json                ← Flow mortalidade do Node-RED
-│   ├── add_mortality_rate.sql
-│   └── covid_total_deaths.sql
+│   ├── 01_create_tables.sql
+│   ├── 02_load_data.py                       ← Carregar os dados nas tabelas
+│   ├── 03_transform.sql
+│   ├── 04_covid_annual_metrics.sql
+│   ├── node-red-flow.json                    ← Flow completo do Node-RED
+│   ├── node-red-mortality-rate.json          ← Flow mortalidade do Node-RED
+│   ├── 05_add_mortality_rate.sql
+│   ├── 06_covid_total_deaths.sql
+│   └── 07_covid_top10_mortality.sql
 │
 ├── data/
 │   ├── input/
@@ -41,15 +42,15 @@ tp01-25436/
 │   │   └── cases_deaths.csv (no Drive)
 │   │
 │   └── output/
-│       ├── covid_annual_metrics.csv      ← Export gerado pelo Python
-│       ├── dashboard_geral.png      ← Print do dashboard geral
-│       ├── dashboards.png      ← Print dos dashboards individuais
+│       ├── covid_annual_metrics.csv          ← Export gerado pelo Python
+│       ├── dashboard_geral.png               ← Print do dashboard geral
+│       ├── dashboards.png                    ← Print dos dashboards individuais
 │       ├── dashboard_mortality_rate.png      ← Print do dashboard de mortalidade  
-│       └── top10_total_deaths.csv      ← Export gerado pelo Python 
+│       └── top10_total_deaths.csv            ← Export gerado pelo Python 
 │
 └── src/
-    ├── export_data.py              ← Script Python de exportação
-    └── export_top10_deaths.py              ← Script Python de exportação top 10
+    ├── export_data.py                        ← Script Python de exportação
+    └── export_top10_deaths.py                ← Script Python de exportação top 10
 ```
 
 ---
