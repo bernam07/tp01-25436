@@ -28,16 +28,11 @@ CREATE TABLE IF NOT EXISTS population (
 CREATE TABLE IF NOT EXISTS cases_deaths (
     id INT AUTO_INCREMENT PRIMARY KEY,
     country VARCHAR(100),
+    country_iso CHAR(3) NULL,
     date DATE,
     new_cases INT,
-    total_cases INT,
+    total_cases BIGINT,
     new_deaths INT,
-    total_deaths INT,
-    new_cases_per_million FLOAT,
-    new_deaths_per_million FLOAT,
-    new_cases_7_day_avg_right FLOAT,
-    new_deaths_7_day_avg_right FLOAT,
-    cfr FLOAT,
-    cfr_100_cases FLOAT,
-    country_iso CHAR(3)
+    total_deaths BIGINT,
+    INDEX (country)
 );

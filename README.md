@@ -86,9 +86,9 @@ tp01-25436/
    CREATE DATABASE health_data;
    USE health_data;
    ```
-2. Executar os scripts SQL da pasta `dataint/` pela seguinte ordem:
+2. Executar os scripts da pasta `dataint/` pela seguinte ordem:
    1. `create_tables.sql`
-   2. `load_data.sql`
+   2. `load_data.py`
    3. `transform.sql`
    4. `covid_annual_metrics.sql`
 
@@ -124,7 +124,7 @@ tp01-25436/
 ### 3. Exportar Dados com Python
 1. Instalar Python e os pacotes necessários:
    ```bash
-   pip install pandas mysql-connector-python
+   pip install pandas sqlalchemy mysql-connector-python
    ```
 2. Executar o script:
    ```bash

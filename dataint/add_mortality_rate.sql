@@ -11,8 +11,8 @@ SET mortality_rate =
 SET SQL_SAFE_UPDATES = 1;
 
 -- Remover coluna
-ALTER TABLE covid_annual_metrics
-DROP COLUMN mortality_rate;
+-- ALTER TABLE covid_annual_metrics
+-- DROP COLUMN mortality_rate;
 
 
 
