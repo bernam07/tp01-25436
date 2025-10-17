@@ -8,7 +8,7 @@
 ---
 
 **Vídeo:**
-[Vídeo](https://drive.google.com/file/d/16SM6qFDZoZueneibgBDGCJxt3bqplM8T/view?usp=sharing)
+[Google Drive - Gravação Completa](https://drive.google.com/file/d/16SM6qFDZoZueneibgBDGCJxt3bqplM8T/view?usp=sharing)
 
 ---
 
@@ -68,8 +68,8 @@ tp01-25436/
 | `population_totals.csv` | População total por país (2020–2024) | World Bank |
 | `iso_country_codes.csv` | Códigos ISO Alpha-2 e Alpha-3 | ISO |
 
-**O ficheiro `cases_deaths.csv` (160 MB)** encontra-se disponível em:  
-[CSV](https://drive.google.com/file/d/14S-5q1-pFyIkXB_FGWjGEWSrDnKOV189/view?usp=drive_link)
+**O ficheiro `cases_deaths.csv` (160 MB)** encontra-se disponível em:
+[Google Drive - CSV](https://drive.google.com/file/d/14S-5q1-pFyIkXB_FGWjGEWSrDnKOV189/view?usp=drive_link)
 
 ---
 
